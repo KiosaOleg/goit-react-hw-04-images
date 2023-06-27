@@ -1,44 +1,42 @@
-import React, { Component } from "react";
+import React, { useState } from 'react';
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { FaSearch } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaSearch } from 'react-icons/fa';
 
-export default class SearchBar extends Component {
-  state = { inputValue: "" };
+export default function SearchBar({ onSubmit }) {
+  const [inputValue, setInputValue] = useState('');
+  // state = { inputValue: '' };
 
-  handleNameChange = (event) => {
-    this.setState({ inputValue: event.currentTarget.value.toLowerCase() });
+  const handleNameChange = event => {
+    setInputValue(event.currentTarget.value.toLowerCase());
   };
 
-  handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
-    if (this.state.inputValue.trim() === "") {
-      return toast.warning("Write something");
+    if (inputValue.trim() === '') {
+      return toast.warning('Write something');
     }
-    this.props.onSubmit(this.state.inputValue);
+    onSubmit(inputValue);
 
-
-    this.setState({ inputValue: "" });
+    setInputValue('');
   };
 
-  render() {
-    return (
-      <div className="Searchbar">
-        <form className="SearchForm" action="" onSubmit={this.handleSubmit}>
-          <input
-            className="SearchForm-input"
-            type="text"
-            name="inputValue"
-            value={this.state.inputValue}
-            onChange={this.handleNameChange}
-            placeholder="Search images and photos"
-          />
-          <button className="SearchForm-button" type="submit">
-            <FaSearch size="2em" />
-          </button>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className="Searchbar">
+      <form className="SearchForm" action="" onSubmit={handleSubmit}>
+        <input
+          className="SearchForm-input"
+          type="text"
+          name="inputValue"
+          value={inputValue}
+          onChange={handleNameChange}
+          placeholder="Search images and photos"
+        />
+        <button className="SearchForm-button" type="submit">
+          <FaSearch size="2em" />
+        </button>
+      </form>
+    </div>
+  );
 }
