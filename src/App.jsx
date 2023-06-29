@@ -63,7 +63,7 @@ export default function App() {
     if (inputValue !== '' && (page !== 1 || images.length === 0)) {
       fetchImages();
     }
-  }, [inputValue, page, images.length, getRemainingPages]);
+  }, [inputValue, page, images.length]);
 
   // const getRemainingPages = totalImages => {
   //   return Math.ceil(totalImages / API.perPage) - page;
