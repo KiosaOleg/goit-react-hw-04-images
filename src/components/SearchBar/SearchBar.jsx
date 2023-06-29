@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaSearch } from 'react-icons/fa';
 
-export default function SearchBar({ onSubmit }) {
+const SearchBar = ({ onSubmit }) => {
   const [inputValue, setInputValue] = useState('');
-  // state = { inputValue: '' };
 
   const handleNameChange = event => {
     setInputValue(event.currentTarget.value.toLowerCase());
@@ -18,7 +16,6 @@ export default function SearchBar({ onSubmit }) {
       return toast.warning('Write something');
     }
     onSubmit(inputValue);
-
     setInputValue('');
   };
 
@@ -39,4 +36,6 @@ export default function SearchBar({ onSubmit }) {
       </form>
     </div>
   );
-}
+};
+
+export default SearchBar;
