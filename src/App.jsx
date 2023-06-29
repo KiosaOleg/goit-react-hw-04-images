@@ -18,7 +18,7 @@ export default function App() {
   const [status, setStatus] = useState('idle');
   const [isLoading, setIsLoading] = useState(true);
   const [loadBtnIsShown, setLoadBtnIsShown] = useState(false);
-  const [totalResults, setTotalResults] = useState(0);
+  // const [totalResults, setTotalResults] = useState(0);
 
   const handleFormSubmit = inputValue => {
     setInputValue(inputValue);
@@ -50,7 +50,7 @@ export default function App() {
         } else {
           setImages(prevImages => [...prevImages, ...images.hits]);
           setStatus('resolved');
-          setTotalResults(images.totalHits);
+          // setTotalResults(images.totalHits);
         }
       } catch (error) {
         setError(error);
