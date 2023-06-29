@@ -30,10 +30,6 @@ export default function App() {
     setPage(prevPage => prevPage + 1);
   };
 
-  const getRemainingPages = totalImages => {
-    return Math.ceil(totalImages / API.perPage) - page;
-  };
-
   useEffect(() => {
     const fetchImages = async () => {
       setIsLoading(true);
@@ -41,6 +37,9 @@ export default function App() {
 
       try {
         const images = await API.fetchImages(inputValue, page);
+        const getRemainingPages = totalImages => {
+          return Math.ceil(totalImages / API.perPage) - page;
+        };
 
         const remainingPages = getRemainingPages(images.totalHits);
         if (remainingPages > 0) setLoadBtnIsShown(true);
@@ -64,10 +63,6 @@ export default function App() {
       fetchImages();
     }
   }, [inputValue, page, images.length]);
-
-  // const getRemainingPages = totalImages => {
-  //   return Math.ceil(totalImages / API.perPage) - page;
-  // };
 
   return (
     <div>
