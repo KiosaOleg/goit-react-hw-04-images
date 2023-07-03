@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import Modal from 'components/Modal/Modal';
+import React, { useState } from 'react';
 
-const ImageGalleryItem = ({ smallImage, largeImage, tags }) => {
+export default function ImageGalleryItem({ smallImage, largeImage, tags }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const toggleModal = () => {
-    setModalIsOpen(!modalIsOpen);
+    setModalIsOpen(modalIsOpen => !modalIsOpen);
   };
 
   return (
@@ -21,6 +21,4 @@ const ImageGalleryItem = ({ smallImage, largeImage, tags }) => {
       )}
     </>
   );
-};
-
-export default ImageGalleryItem;
+}

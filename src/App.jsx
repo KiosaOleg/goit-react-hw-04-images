@@ -1,14 +1,13 @@
 import './App.css';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useState, useEffect } from 'react';
-
 import ImageError from 'components/ImageError/ImageError';
 import Notification from 'components/Notification/Notification';
 import API from 'components/api/api';
 import ButtonLoadMore from 'components/ButtonLoadMore/ButtonLoadMore';
 import ImageGalleryList from 'components/ImageGalleryList/ImageGalleryList';
 import SearchBar from 'components/SearchBar/SearchBar';
+import { useState, useEffect } from 'react';
 
 export default function App() {
   const [inputValue, setInputValue] = useState('');
@@ -16,9 +15,42 @@ export default function App() {
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
-  const [isLoading, setIsLoading] = useState(true);
   const [loadBtnIsShown, setLoadBtnIsShown] = useState(false);
-  // const [totalResults, setTotalResults] = useState(0);
+
+  useEffect(() => {
+    if (!inputValue) {
+      return;
+    }
+
+    setStatus('pending');
+
+    const fetchImages = async () => {
+      try {
+        const results = await API.fetchImages(inputValue, page);
+
+        if (results.hits.length === 0) {
+          setStatus('empty');
+          return;
+        }
+
+        setImages(prevImages => [...prevImages, ...results.hits]);
+        const remainingPages =
+          Math.ceil(results.totalHits / API.perPage) - page;
+
+        if (remainingPages > 0) {
+          setLoadBtnIsShown(true);
+        } else {
+          setLoadBtnIsShown(false);
+        }
+        setStatus('resolved');
+      } catch (error) {
+        setStatus('rejected');
+        toast.error('Oops... Something went wrong');
+      }
+    };
+
+    fetchImages();
+  }, [inputValue, page]);
 
   const handleFormSubmit = inputValue => {
     setInputValue(inputValue);
@@ -29,40 +61,6 @@ export default function App() {
   const loadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      setIsLoading(true);
-      setLoadBtnIsShown(false);
-
-      try {
-        const images = await API.fetchImages(inputValue, page);
-        const getRemainingPages = totalImages => {
-          return Math.ceil(totalImages / API.perPage) - page;
-        };
-
-        const remainingPages = getRemainingPages(images.totalHits);
-        if (remainingPages > 0) setLoadBtnIsShown(true);
-
-        if (images.hits.length === 0) {
-          setStatus('empty');
-        } else {
-          setImages(prevImages => [...prevImages, ...images.hits]);
-          setStatus('resolved');
-          // setTotalResults(images.totalHits);
-        }
-      } catch (error) {
-        setError(error);
-        setStatus('rejected');
-      }
-
-      setIsLoading(false);
-    };
-
-    if (inputValue !== '' && (page !== 1 || images.length === 0)) {
-      fetchImages();
-    }
-  }, [inputValue, page, images.length]);
 
   return (
     <div>
@@ -86,9 +84,7 @@ export default function App() {
 
       {status === 'rejected' && <ImageError message={error.message} />}
 
-      {status === 'resolved' && (
-        <ImageGalleryList images={images} isLoading={isLoading} />
-      )}
+      <ImageGalleryList images={images} isLoading={status === 'pending'} />
       {loadBtnIsShown && <ButtonLoadMore onClick={loadMore} />}
     </div>
   );
