@@ -13,7 +13,7 @@ export default function App() {
   const [inputValue, setInputValue] = useState('');
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [status, setStatus] = useState('idle');
   const [loadBtnIsShown, setLoadBtnIsShown] = useState(false);
 
